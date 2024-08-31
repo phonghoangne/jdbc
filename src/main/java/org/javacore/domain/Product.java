@@ -1,4 +1,4 @@
-package org.javacore.JDBT_BT;
+package org.javacore.domain;
 
 import java.sql.Timestamp;
 

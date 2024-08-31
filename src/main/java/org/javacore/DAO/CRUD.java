@@ -7,6 +7,4 @@ public interface CRUD<T> {
     Boolean update(T t);
     Boolean deleteById(Integer id);
     List<T> read();
-
-
 }

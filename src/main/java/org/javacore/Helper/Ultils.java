@@ -6,8 +6,8 @@ import java.sql.SQLException;
 public class Ultils {
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/jdbc";
     private static final String JDBC_USER = "root";
-    private static final String JDBC_PASSWORD = "1234";
-// cai de dki driver
+    private static final String JDBC_PASSWORD = "root123";
+// cai de dki driver voi DriverManageger
     static {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");// moi loia database co 1 duong dan khac nhay

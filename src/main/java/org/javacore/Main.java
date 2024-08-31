@@ -1,40 +1,59 @@
 package org.javacore;
 
-import org.javacore.DAO.*;
-import org.javacore.Helper.Ultils;
-import org.javacore.JDBT_BT.Locator;
-import org.javacore.JDBT_BT.Product;
-import org.javacore.JDBT_BT.ProductSer;
-import org.javacore.JDBT_BT.WareHouse;
-import org.javacore.domain.Mentor;
-import org.javacore.domain.StudentUDPM;
+import org.javacore.DAO.DAOImpl.LocatorImp;
+import org.javacore.DAO.DAOImpl.ProductImp;
+import org.javacore.DAO.DAOImpl.WareHouseImp;
+import org.javacore.DAO.LocatorService;
+import org.javacore.DAO.ProductService;
+import org.javacore.DAO.WarehouseService;
+import org.javacore.domain.Locator;
+import org.javacore.domain.Product;
+import org.javacore.domain.WareHouse;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Scanner;
 
-
+// mo hinh three layer
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
+        WarehouseService warehouseService = new WareHouseImp();
 
-        List<Product> sortedProducts = ProductSer.sapXepSoLuongTonKho();
-        List<Product> timIt = ProductSer.findProductItemOfComBo(1);
-        for (Product product : timIt) {
-            System.out.println("ID: " + product.getId() +
-                    ", Tên: " + product.getName() +
-                    ", Số lượng tồn kho: " + product.getQtyStock() +
-                    ", Kích hoạt: " + product.getIsActive() +
-                    ", Ngày tạo: " + product.getCreated() +
-                    ", Người tạo: " + product.getCreateBy() +
-                    ", Loại sản phẩm: " + product.getProductType() +
-                    ", ID sản phẩm cha: " + product.getProductparentId());
-        }
+        ProductService productService = new ProductImp();
+
+        List<Product> products  = productService.orderByOnHand();
+
+        LocatorService locatorService = new LocatorImp();
+
+        List<Locator> locators = locatorService.findByName("P");
+
+        Collections.sort(locators, new Comparator<Locator>() {
+            @Override
+            public int compare(Locator o1, Locator o2) {
+                return 0;
+            }
+        });
+
+
+//        System.out.println(productService.findProductItemOfComBo(1));
+
+//        for(Product product: products)
+//        {
+//            System.out.println(product.toString());
+//        }
+
+//        List<WareHouse> listWarehouse = warehouseService.read();
+
+//        System.out.println(warehouseService.insert(new WareHouse(1,"Sai Gon","Y","Kho Sai Gon","ThanhNC", "2024-08-31")));
+
+//       listWarehouse = warehouseService.read();
+//        System.out.println(warehouseService.findByNameLike("Sai"));
+//        for (WareHouse w : listWarehouse)
+//        {
+//            System.out.println(w.toString());
+//        }
 
 //        for (Product product : sortedProducts) {
 //            System.out.println("ID: " + product.getId() +

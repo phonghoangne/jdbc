@@ -1,7 +1,8 @@
-package org.javacore.DAO;
+package org.javacore.DAO.DAOImpl;
 
+import org.javacore.DAO.LocatorService;
 import org.javacore.Helper.Ultils;
-import org.javacore.JDBT_BT.Locator;
+import org.javacore.domain.Locator;
 import org.javacore.domain.Exception.ObjectNotFoundException;
 
 import java.sql.Connection;
@@ -10,7 +11,9 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LocatorImp implements CRUD<Locator> {
+public class LocatorImp implements LocatorService {
+
+
     StringBuilder sql;
 
     @Override
@@ -109,4 +112,32 @@ public class LocatorImp implements CRUD<Locator> {
         return listLoca;
     }
 
+    @Override
+    public List<Locator> findByName(String name) {
+        StringBuilder sql = new StringBuilder();
+        List<Locator> locators = new ArrayList();
+        try{
+            Connection con = Ultils.getConnection();
+            PreparedStatement pstmt = con.prepareStatement(sql.toString());
+            pstmt.setString(1,"%"+name+"%");
+            ResultSet rs = pstmt.executeQuery();
+            while(rs.next()){
+                Locator locator = new Locator();
+                locator.setId(rs.getInt("id"));
+                locator.setName(rs.getString("name"));
+                locator.setIsActive(rs.getString("is_active"));
+                locator.setX(rs.getInt("x"));
+                locator.setY(rs.getInt("y"));
+                locator.setZ(rs.getInt("z"));
+                locator.setCreated(rs.getString("creatd"));
+                locator.setCreateBy(rs.getString("created_by"));
+                locator.setWareHouseId(rs.getInt("warehouse_id"));
+                locators.add(locator);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+
+        }
+        return locators;
+    }
 }

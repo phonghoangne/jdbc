@@ -1,16 +1,21 @@
-package org.javacore.DAO;
+package org.javacore.DAO.DAOImpl;
 
+import org.javacore.DAO.CRUD;
+import org.javacore.DAO.WarehouseService;
 import org.javacore.Helper.Ultils;
-import org.javacore.JDBT_BT.WareHouse;
+import org.javacore.domain.Locator;
+import org.javacore.domain.WareHouse;
 import org.javacore.domain.Exception.ObjectNotFoundException;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.sql.PreparedStatement;
 
-public class WareHouseImp implements CRUD<WareHouse> {
+public class WareHouseImp implements WarehouseService {
 
 
     StringBuilder sql;
@@ -94,4 +99,44 @@ public class WareHouseImp implements CRUD<WareHouse> {
                 }
                 return listHouse;
     }
+
+    @Override
+    public List<WareHouse> findByNameLike(String name) {
+        StringBuilder sql = new StringBuilder("select * from warehouse where name like % ? % and isActive = ?  ;");
+        List<WareHouse> warehouses = new ArrayList<>();
+        try{
+            Connection conn = Ultils.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql.toString());
+            pstmt.setString(1,"%"+name+"%");
+            pstmt.setString(2,"Y");
+            ResultSet rs = pstmt.executeQuery();
+            while(rs.next()){
+                WareHouse warehouse = new WareHouse();
+                warehouse.setId(rs.getInt("id"));
+                warehouse.setName(rs.getString("name"));
+                warehouse.setActive(rs.getString("is_active"));
+                warehouse.setDescription(rs.getString("description"));
+                warehouse.setCreateBy(rs.getString("created_by"));
+                warehouses.add(warehouse);
+
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return warehouses;
+    }
+
+    @Override
+    public  List<WareHouse> orderByName(List<WareHouse> list) {
+
+        Collections.sort(list, new Comparator<WareHouse>() {
+            @Override
+            public int compare(WareHouse o1, WareHouse o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
+      return  list;
+    }
+
+
 }
